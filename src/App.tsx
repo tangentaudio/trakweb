@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { Box, Button } from '@mui/material';
-import { Grid, createTheme, ThemeProvider, Typography } from '@mui/material';
+import { Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@mui/material';
 import { indigo, lightGreen } from '@mui/material/colors';
 
 import DosPlayer from "./dos-player";
@@ -59,6 +59,7 @@ const theme = createTheme({
 
 function App() {
   let ci: CommandInterface;
+  const [bundle, setBundle] = useState<string | null>('mx3.bundle');
 
   function sci(p: Promise<CommandInterface>) {
     p.then((pci) => { console.log("success", pci); ci = pci }, () => { console.log("failure") });
@@ -79,9 +80,17 @@ function App() {
               <Typography variant="h4" sx={{fontWeight: 900}}>TrakWeb</Typography>
             </Grid>
             <Grid item>
-              <div className="App" style={{ width: "720px", height: "348px", marginTop: '20px'}} >
-                <DosPlayer bundleUrl="lx2.jsdos" setCommandInterface={sci} />
-              </div>
+              <Tabs value={bundle} onChange={ (e, v) => { setBundle(v) } }>
+                <Tab label="Mill" value="mx3.bundle"/>
+                <Tab label="Lathe" value="lx2.bundle"/>
+              </Tabs>
+            </Grid>
+            <Grid item>
+              { bundle !== null &&
+                  <div className="App" style={{ width: "720px", height: "348px", marginTop: '4px'}} >
+                    <DosPlayer bundleUrl={bundle} setCommandInterface={sci} />
+                  </div>
+              }
             </Grid>
             <Grid item>
               <Grid container direction="row" spacing="1px" sx={{ pl: '1px', pt: '5px' }}>
