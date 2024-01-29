@@ -10,7 +10,7 @@ This project is intended for educational and training purposes, primarily in a m
 
 At the moment only a linux environment is supported for development.  It was tested on Ubuntu 22.04.  Once built, the html/js can be hosted from any type of server.
 
-- Install a recent version of `node` and `npm`.
+- Install a recent version of `node` and `npm`.  It was developed with `node v18.18.2` and `npm v9.8.1`.
 - Clone this repo and change into the `protohak` directory.
 - Run `npm install`.  This will take a few minutes.
 - Run `./build-bundles.sh`.  This will download the disk images and documentation files from the SWI public web site and use them to build "bundles" that js-dos will use.
