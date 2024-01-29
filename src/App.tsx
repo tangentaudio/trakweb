@@ -59,7 +59,7 @@ const theme = createTheme({
 
 function App() {
   let ci: CommandInterface;
-  const [bundle, setBundle] = useState<string | null>('mx3.bundle');
+  const [bundle, setBundle] = useState<string | null>('mx3');
 
   function sci(p: Promise<CommandInterface>) {
     p.then((pci) => { console.log("success", pci); ci = pci }, () => { console.log("failure") });
@@ -81,16 +81,14 @@ function App() {
             </Grid>
             <Grid item>
               <Tabs value={bundle} onChange={ (e, v) => { setBundle(v) } }>
-                <Tab label="Mill" value="mx3.bundle"/>
-                <Tab label="Lathe" value="lx2.bundle"/>
+                <Tab label="Mill" value="mx3"/>
+                <Tab label="Lathe" value="lx2"/>
               </Tabs>
             </Grid>
             <Grid item>
-              { bundle !== null &&
-                  <div className="App" style={{ width: "720px", height: "348px", marginTop: '4px'}} >
-                    <DosPlayer bundleUrl={bundle} setCommandInterface={sci} />
-                  </div>
-              }
+                <div className="App" style={{ width: "720px", height: "348px", marginTop: '4px'}} >
+                  <DosPlayer bundleUrl={bundle + '.bundle'} setCommandInterface={sci} />
+                </div>
             </Grid>
             <Grid item>
               <Grid container direction="row" spacing="1px" sx={{ pl: '1px', pt: '5px' }}>
@@ -103,6 +101,9 @@ function App() {
                 <Grid item><Button variant="pointy" onClick={() => { sendKey(Keys.KBD_f7) }}>F7</Button></Grid>
                 <Grid item><Button variant="pointy" onClick={() => { sendKey(Keys.KBD_f8) }}>F8</Button></Grid>
               </Grid>
+            </Grid>
+            <Grid item>
+              <Button sx={{width:'200px'}} onClick={ ()=> { window.open(bundle + '.pdf', '_blank')} }> Open Manual</Button>
             </Grid>
             <Grid item sx={{mt: '20px'}}>
               <Typography color="#aaaaaa" variant="caption">Copyright 2024 Steve Richardson (steve.richardson@makeitlabs.com) - for educational and training purposes only.</Typography>
