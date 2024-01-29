@@ -27,6 +27,8 @@ const theme = createTheme({
           fontWeight: '900',
           width: '70px',
           height: '70px',
+          borderRadius: '10px',
+          border: '4px solid #22222255',
 
           clipPath: "polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%, 0% 10%);"
         },
@@ -40,9 +42,10 @@ const theme = createTheme({
             backgroundColor: '#333333',
             color: 'white',
             paddingTop: '40px',
+            border: '0px',
             clipPath: "polygon(50% 0%, 100% 30%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%, 0% 30%);",
             width: '89px',
-            height: '89px',
+            height: '89px'
           },
         },
         {
@@ -76,29 +79,33 @@ function App() {
       <Tabs value={tab} onChange={(e, v) => { setTab(v) }}>
         <Tab label="Mill" value="mx3" />
         <Tab label="Lathe" value="lx2" />
-        <Button sx={{ width: '200px' }} onClick={() => { window.open(tab + '.pdf', '_blank') }}>{"Open " + tab + " Manual \u29c9 "}</Button>
+        <Button sx={{ border: 'none', width: '200px' }} onClick={() => { window.open(tab + '.pdf', '_blank') }}>{"Open " + tab + " Manual \u29c9 "}</Button>
       </Tabs>
 
-      <Box sx={{ border: '8px solid black', borderRadius: '30px', padding: '6px', mt: '6px', ml: '10px', backgroundColor: '#eeeeee', maxWidth: '1170px',
-                 filter: 'drop-shadow(20px 20px 8px #333333)' }}>
+      <Box sx={{
+        border: '8px solid black', borderRadius: '30px', padding: '6px', mt: '15px', ml: '10px', backgroundColor: '#eeeeee', maxWidth: '1170px',
+        filter: 'drop-shadow(20px 20px 8px #333333)'
+      }}>
         <Grid container direction="row" spacing={2} sx={{ width: '100%', pl: '20px', pt: '20px' }}>
           <Grid item>
             <Grid container direction="column" spacing="1px">
               <Grid item>
-                <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', backgroundColor: '#aaaaaa' }}>
-                  <div className="App" style={{ width: "720px", height: "360px", border: '4px solid black', borderRadius: '12px' }} >
+                <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', backgroundColor: '#cccccc' }}>
+                  <div className="App" style={{ width: "732px", height: "360px", border: '6px solid black', borderRadius: '15px' }} >
                     <DosPlayer bundleUrl={tab + '.bundle'} setCommandInterface={sci} />
                   </div>
-                  <KeypadFKeys sendKey={sendKey} />
+                  <div style={{ marginLeft: '6px' }}>
+                    <KeypadFKeys sendKey={sendKey} />
+                  </div>
                 </Box>
               </Grid>
               <Grid item >
-                <Box component="img" src="trakweb.png" sx={{ width: '300px', ml: '20px' }} />
+                <Box component="img" src="trakweb.png" sx={{ width: '300px', ml: '10px' }} />
               </Grid>
             </Grid>
           </Grid>
           <Grid item>
-            <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', ml: '10px', mb: '20px', backgroundColor: '#eeeeee' }}>
+            <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', ml: '10px', mb: '20px', backgroundColor: '#cccccc' }}>
               {tab === 'lx2' &&
                 <KeypadLX2 sendKey={sendKey} />
               }
@@ -110,8 +117,8 @@ function App() {
         </Grid>
       </Box>
 
-      <Grid container direction="column" sx={{ mt: '20px', ml: '10px'}}>
-      <Grid item>
+      <Grid container direction="column" sx={{ mt: '20px', ml: '10px' }}>
+        <Grid item>
           <Typography color="#aaaaaa" variant="caption">TRAK® is a registered trademark of Southwestern Industries.</Typography>
         </Grid>
         <Grid item>
