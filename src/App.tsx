@@ -79,13 +79,13 @@ function App() {
         <Button sx={{ width: '200px' }} onClick={() => { window.open(tab + '.pdf', '_blank') }}>{"Open " + tab + " Manual \u29c9 "}</Button>
       </Tabs>
 
-      <Box sx={{ border: '8px solid black', borderRadius: '30px', padding: '6px', mt: '6px', ml: '10px', backgroundColor: '#eeeeee', maxWidth: '60%',
+      <Box sx={{ border: '8px solid black', borderRadius: '30px', padding: '6px', mt: '6px', ml: '10px', backgroundColor: '#eeeeee', maxWidth: '1170px',
                  filter: 'drop-shadow(20px 20px 8px #333333)' }}>
         <Grid container direction="row" spacing={2} sx={{ width: '100%', pl: '20px', pt: '20px' }}>
           <Grid item>
             <Grid container direction="column" spacing="1px">
               <Grid item>
-                <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '6px', backgroundColor: '#aaaaaa' }}>
+                <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', backgroundColor: '#aaaaaa' }}>
                   <div className="App" style={{ width: "720px", height: "360px", border: '4px solid black', borderRadius: '12px' }} >
                     <DosPlayer bundleUrl={tab + '.bundle'} setCommandInterface={sci} />
                   </div>
@@ -98,7 +98,7 @@ function App() {
             </Grid>
           </Grid>
           <Grid item>
-            <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '6px', ml: '20px', mb: '20px', backgroundColor: '#eeeeee' }}>
+            <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', ml: '10px', mb: '20px', backgroundColor: '#eeeeee' }}>
               {tab === 'lx2' &&
                 <KeypadLX2 sendKey={sendKey} />
               }
