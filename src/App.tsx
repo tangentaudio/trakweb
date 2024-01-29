@@ -148,7 +148,7 @@ function App() {
         </Grid>
         <Grid item>
           <Typography variant="caption" sx={{fontWeight: '600', color: '#777777' }}>
-            For educational and training purposes only - not for commercial use or resale.
+          <Link href="https://github.com/tangentaudio/protohak">ProtoHAK</Link> is for educational and training purposes only - not for commercial use or resale.
           </Typography>
         </Grid>
       </Grid>
