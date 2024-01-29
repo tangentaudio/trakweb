@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './App.css';
-import { Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@mui/material';
+import { Link, Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@mui/material';
 import { blue, orange } from '@mui/material/colors';
 import DosPlayer from "./dos-player";
 import { CommandInterface } from "emulators";
@@ -17,7 +17,16 @@ declare module '@mui/material/Button' {
 const theme = createTheme({
   palette: {
     primary: blue,
-    secondary: orange
+    secondary: orange,
+    action: {
+      active: blue[200],
+      hover: blue[100],
+      hoverOpacity: 0.7,
+      focus: blue[600],
+      focusOpacity: 1,
+      selected: blue[300],
+      selectedOpacity: 1
+    },
   },
   components: {
     MuiButton: {
@@ -128,10 +137,19 @@ function App() {
 
       <Grid container direction="column" sx={{ mt: '30px', ml: '10px' }}>
         <Grid item>
-          <Typography color="#aaaaaa" variant="caption">TRAK® is a registered trademark of Southwestern Industries.</Typography>
+          <Typography variant="caption" sx={{fontWeight: '500', color: '#aaaaaa'}}>
+            TRAK® is a registered trademark of Southwestern Industries.  Unmodified original machine software images are available on their web site.
+          </Typography>
         </Grid>
         <Grid item>
-          <Typography color="#aaaaaa" variant="caption">Copyright © 2024 Steve Richardson (steve.richardson@makeitlabs.com) - for educational and training purposes only.</Typography>
+          <Typography variant="caption" sx={{fontWeight: '600', color: '#999999' }}>
+            30 year old DOS software in a web browser is made possible through the magic of <Link href="https://js-dos.com/">js-dos v7</Link>, built on a wasm/emscripten version of <Link href="https://www.dosbox.com/">DOSBox</Link>.
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="caption" sx={{fontWeight: '600', color: '#777777' }}>
+            For educational and training purposes only - not for commercial use or resale.
+          </Typography>
         </Grid>
       </Grid>
 
