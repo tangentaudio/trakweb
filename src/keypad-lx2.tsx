@@ -13,8 +13,8 @@ export default function KeypadLX2(props: KeypadProps) {
           <Grid container direction="column" spacing="1px">
             <Grid item>
               <Grid container direction="row" spacing="1px">
-                <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_enter) }}>GO</Button></Grid>
-                <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_esc) }}>STOP</Button></Grid>
+                <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_g) }}>GO</Button></Grid>
+                <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_s) }}>STOP</Button></Grid>
                 <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_up) }}>FEED ⬆</Button></Grid>
                 <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_down) }}>FEED ⬇</Button></Grid>
               </Grid>
@@ -65,7 +65,7 @@ export default function KeypadLX2(props: KeypadProps) {
             </Grid>
             <Grid item>
               <Grid container direction="row" spacing="1px">
-                <Grid item><Button variant="contained" color="secondary" onClick={() => { props.sendKey(Keys.KBD_NONE) }}>RSTR</Button></Grid>
+                <Grid item><Button variant="contained" color="secondary" onClick={() => { props.sendKey(Keys.KBD_esc) }}>RSTR</Button></Grid>
                 <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_minus) }}>+/-</Button></Grid>
                 <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_0) }}>0</Button></Grid>
                 <Grid item><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_period) }}>.</Button></Grid>
