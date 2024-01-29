@@ -36,7 +36,8 @@ export default function KeypadLX2(props: KeypadProps) {
                 <Grid item><Box sx={{width: '70px'}}/></Grid>
                 <Grid item><Button variant="contained" color="secondary"  onClick={() => { props.sendKey(Keys.KBD_i) }}>INC SET</Button></Grid>
                 <Grid item><Button variant="contained" color="secondary"  onClick={() => { props.sendKey(Keys.KBD_a) }}>ABS SET</Button></Grid>
-                <Grid item><Box sx={{width: '70px'}}/></Grid>
+                <Grid item><Button sx={{border: 'none', color: '#000000'}}  onClick={() => { window.open('lx2.pdf', '_blank') }}>Help</Button></Grid>
+
               </Grid>
             </Grid>
             <Grid item>

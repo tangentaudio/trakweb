@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './App.css';
-import { Button, Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@mui/material';
+import { Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@mui/material';
 import { blue, orange } from '@mui/material/colors';
 import DosPlayer from "./dos-player";
 import { CommandInterface } from "emulators";
@@ -40,6 +40,9 @@ const theme = createTheme({
             fontWeight: 500,
             borderRadius: 0,
             backgroundColor: '#333333',
+            '&:hover': {
+              background: "#555555",
+            },
             color: 'white',
             paddingTop: '40px',
             border: '0px',
@@ -77,9 +80,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Tabs value={tab} onChange={(e, v) => { setTab(v) }}>
-        <Tab label="Mill" value="mx3" />
-        <Tab label="Lathe" value="lx2" />
-        <Button sx={{ border: 'none', width: '200px' }} onClick={() => { window.open(tab + '.pdf', '_blank') }}>{"Open " + tab + " Manual \u29c9 "}</Button>
+        <Tab label="MX3 Mill" value="mx3" />
+        <Tab label="LX2 Lathe" value="lx2" />
       </Tabs>
 
       <Box sx={{
@@ -100,7 +102,14 @@ function App() {
                 </Box>
               </Grid>
               <Grid item >
-                <Box component="img" src="trakweb.png" sx={{ width: '300px', ml: '10px' }} />
+                <Grid container direction="row" sx={{ height: '100px' }} spacing={2}>
+                  <Grid item>
+                    <Box component="img" src="protohak.png" sx={{ height: '100px', ml: '10px' }} />
+                  </Grid>
+                  <Grid item sx={{ display: 'flex', alignItems: 'flex-end'}}>
+                    <Typography variant="h2" sx={{fontWeight: 900, mb: '-4px' }}>{tab?.toUpperCase()}</Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -117,12 +126,12 @@ function App() {
         </Grid>
       </Box>
 
-      <Grid container direction="column" sx={{ mt: '20px', ml: '10px' }}>
+      <Grid container direction="column" sx={{ mt: '30px', ml: '10px' }}>
         <Grid item>
           <Typography color="#aaaaaa" variant="caption">TRAK® is a registered trademark of Southwestern Industries.</Typography>
         </Grid>
         <Grid item>
-          <Typography color="#aaaaaa" variant="caption">Copyright 2024 Steve Richardson (steve.richardson@makeitlabs.com) - for educational and training purposes only.</Typography>
+          <Typography color="#aaaaaa" variant="caption">Copyright © 2024 Steve Richardson (steve.richardson@makeitlabs.com) - for educational and training purposes only.</Typography>
         </Grid>
       </Grid>
 
