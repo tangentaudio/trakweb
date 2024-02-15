@@ -3,7 +3,7 @@ TEMPLATE_DIR=`pwd`/bundle-template
 LX2_SW_URL="https://www.southwesternindustries.com/media/software/lx2_400.exe?rev=45854"
 MX3_SW_URL="https://www.southwesternindustries.com/media/software/mx3_24206.exe?rev=50815"
 LX2_MANUAL_URL="https://www.southwesternindustries.com/media/manuals/20099_manual.pdf?rev=153931"
-MX3_MANUAL_URL="https://www.southwesternindustries.com/media/manuals/16992_manual.pdf?rev=153931"
+MX3_MANUAL_URL="https://www.southwesternindustries.com/media/manuals/20317_manual_CD.pdf?rev=102924"
 LX2_BUNDLE=`pwd`/public/lx2.bundle
 MX3_BUNDLE=`pwd`/public/mx3.bundle
 
