@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './App.css';
 import { Link, Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@mui/material';
 import { blue, orange } from '@mui/material/colors';
 import DosPlayer from "./dos-player";
-import { CommandInterface } from "emulators";
+import { CommandInterface, CommandInterfaceEvents, MessageType } from "emulators";
 import KeypadFKeys from './keypad-fkeys';
 import KeypadLX2 from './keypad-lx2';
 import KeypadMX3 from './keypad-mx3';
+import SaveProgram from './SaveProgram';
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
@@ -74,11 +75,37 @@ const theme = createTheme({
 
 function App() {
   let ci: CommandInterface;
-  const [tab, setTab] = useState<string | null>('mx3');
+
+  let serialCallback:any = null;
+
+  const [tab, setTab] = useState<string>('lx2');
+  
 
   function sci(p: Promise<CommandInterface>) {
-    p.then((pci) => { console.log("success", pci); ci = pci }, () => { console.log("failure") });
+    p.then((cmdifc) => {
+      ci = cmdifc;
+
+      let evts: CommandInterfaceEvents = ci.events();
+      //evts.onStdout( (msg) => { console.log('STDOUT>> ' + msg); } );     
+      evts.onMessage( (mt:MessageType, ...args:any) => { 
+        if (args && args[0]) {
+          let m:string = args[0];
+          if (mt === 'error' && m.startsWith('[LOG_MSG]SerialDummyTransmitByte: 0x')) {
+            m = m.replace('[LOG_MSG]SerialDummyTransmitByte: 0x', '');
+            let charVal = parseInt(m, 16);
+            if (serialCallback)
+              serialCallback(charVal);
+          }
+        }
+      } );     
+
+    }, () => { console.log("failure") });
   }
+
+  function registerSerialCharCallback(f: Function) {
+    serialCallback = f;
+  }
+
 
   function sendKey(kcode: number) {
     if (ci !== null) {
@@ -134,6 +161,8 @@ function App() {
           </Grid>
         </Grid>
       </Box>
+
+      <SaveProgram tab={tab} registerCallback={registerSerialCharCallback} />
 
       <Grid container direction="column" sx={{ mt: '30px', ml: '10px' }}>
         <Grid item>
