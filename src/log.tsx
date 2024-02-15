@@ -24,12 +24,12 @@ function DraggablePaper(props: PaperProps) {
 export default function Log(props: LogProps) {
 
     const logEndRef = useRef<HTMLDivElement | null>(null);
+    const log = useRef<string>('');
 
     const logBuffer = useRef('');
 
     const [unread, setUnread] = useState<number>(0);
     const [open, setOpen] = useState<boolean>(false);
-    const [log, setLog] = useState<string>('');
 
     const scrollToBottom = () => {
         logEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -40,13 +40,16 @@ export default function Log(props: LogProps) {
     }, [log]);
 
     const clear = () => {
-        setLog('');
+        log.current = '';
+        setUnread(0);
     }
 
     const addLogLine = (line: string) => {
+        line = line.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+        line = line.replace(/\n/g, '');
         if (line != '[LOG_MISC]') {
-            const newlog = log + line + '\n';
-            setLog(newlog);
+            console.log(line);
+            log.current = log.current + line + '\n';
             setUnread(unread + 1);
         }
     }
@@ -67,12 +70,13 @@ export default function Log(props: LogProps) {
                 <DialogContent sx={{ fontSize: '10pt', fontWeight: 100, fontFamily: 'monospace', minHeight: '400px', maxHeight: '400px' }}>
                     <div>
                         <pre>
-                            {log}
+                            {log.current}
                         </pre>
                         <div ref={logEndRef} />
                     </div>
                 </DialogContent>
                 <DialogActions>
+                    <Button variant="outlined" sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color="secondary" onClick={clear}>Clear</Button>
                     <Button variant="contained" sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color="primary" onClick={() => { setOpen(false) }}>Close</Button>
                 </DialogActions>
             </Dialog>

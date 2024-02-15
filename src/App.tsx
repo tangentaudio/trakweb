@@ -98,6 +98,7 @@ function App() {
       ci = cmdifc;
 
       let evts: CommandInterfaceEvents = ci.events();
+      
       evts.onStdout((msg: string) => {
         if (logCallback)
           logCallback(msg);
