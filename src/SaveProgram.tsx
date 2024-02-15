@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField } from "@mui/material";
 
 interface SaveProgramProps {
@@ -8,12 +8,23 @@ interface SaveProgramProps {
 
 export default function SaveProgram(props: SaveProgramProps) {
 
+    const progEndRef = useRef<HTMLDivElement | null>(null);
+
     const serialBuffer = useRef('');
 
     const [downloading, setDownloading] = useState<boolean>(false);
     const [program, setProgram] = useState<string>('');
     const [programNumber, setProgramNumber] = useState<string>('');
     const [filename, setFilename] = useState<string>('program.' + props.id);
+
+    const scrollToBottom = () => {
+        progEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [program]);
+
 
     const download = async () => {
         const blob: Blob = new Blob([program], { type: 'text/plain' });
@@ -57,7 +68,7 @@ export default function SaveProgram(props: SaveProgramProps) {
                     setFilename(pn + '.' + props.id);
                 }
             }
-    
+
             sbuf = sbuf + c;
             serialBuffer.current = sbuf;
             setProgram(sbuf);
@@ -73,14 +84,17 @@ export default function SaveProgram(props: SaveProgramProps) {
                 {downloading &&
                     'Receiving Program #' + programNumber + ' (' + program.length + ' bytes)'
                 }
-                {! downloading &&
+                {!downloading &&
                     'Received Program #' + programNumber + ' (' + program.length + ' bytes total)'
                 }
             </DialogTitle>
-            <DialogContent sx={{ fontSize: '10pt', fontWeight: 100, fontFamily: 'monospace', minHeight:'400px', maxHeight: '400px' }}>
-                <pre>
-                    {program}
-                </pre>
+            <DialogContent sx={{ fontSize: '10pt', fontWeight: 100, fontFamily: 'monospace', minHeight: '400px', maxHeight: '400px' }}>
+                <div>
+                    <pre>
+                        {program}
+                    </pre>
+                    <div ref={progEndRef} />
+                </div>
             </DialogContent>
             <DialogActions>
                 <TextField disabled={downloading} label="Download Filename" value={filename} onChange={(ev) => { setFilename(ev.target.value) }}></TextField>

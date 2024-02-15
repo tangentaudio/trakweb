@@ -149,7 +149,9 @@ function App() {
               <Grid item>
                 <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', backgroundColor: '#cccccc' }}>
                   <div className="App" style={{ width: "732px", height: "360px", border: '6px solid black', borderRadius: '15px' }} >
-                    <DosPlayer bundleUrl={bundles[tab].bundle} setCommandInterface={sci} />
+                    { bundles[tab].bundle &&
+                      <DosPlayer bundleUrl={bundles[tab].bundle} setCommandInterface={sci} />
+                    }
                   </div>
                   <div style={{ marginLeft: '6px' }}>
                     <KeypadFKeys sendKey={sendKey} />
