@@ -2,4 +2,7 @@ package-lock.json
 node_modules
 public/*.bundle
 public/*.pdf
+src/bundles.tsx
 _work
+private
+

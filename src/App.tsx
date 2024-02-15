@@ -8,7 +8,8 @@ import KeypadFKeys from './keypad-fkeys';
 import KeypadLathe from './keypad-lathe';
 import KeypadMill from './keypad-mill';
 import SaveProgram from './SaveProgram';
-import { ObjectFlags } from 'typescript';
+import { bundles } from './bundles';
+
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
@@ -79,19 +80,23 @@ function App() {
 
   let serialCallback:Function|null = null;
 
-  const bundles = [
-    {id: 'lx2', desc: 'LX2 Lathe', bundle: 'lx2.bundle', keypad: 'lathe'},
-    {id: 'mx3', desc: 'MX3 Mill', bundle: 'mx3.bundle', keypad: 'mill'},
-  ];
+  const lastTabVal = localStorage.getItem('currentTab');
 
-  const [tab, setTab] = useState<number>(0);
+  let lastTab = 0;
+  if (lastTabVal)
+    lastTab = parseInt(lastTabVal)
+
+  if (lastTab >= bundles.length)
+    lastTab = 0;
+
+  const [tab, setTab] = useState<number>(lastTab);
   
-
   function sci(p: Promise<CommandInterface>) {
     p.then((cmdifc) => {
       ci = cmdifc;
 
       let evts: CommandInterfaceEvents = ci.events();
+      evts.onStdout( (msg:string) => { console.log(msg);})
       evts.onMessage( (mt:MessageType, ...args:any) => { 
         if (args && args[0]) {
           let m:string = args[0];
@@ -100,6 +105,8 @@ function App() {
             let charVal = parseInt(m, 16);
             if (serialCallback)
               serialCallback(charVal);
+          } else {
+            console.log(args[0]);
           }
         }
       } );     
@@ -118,9 +125,14 @@ function App() {
     }
   }
 
+  function tabChanged(v: number) {
+    localStorage.setItem('currentTab', v.toString());
+    setTab(v);
+  }
+
   return (
     <ThemeProvider theme={theme}>
-      <Tabs value={tab} onChange={(e, v) => { setTab(v) }}>
+      <Tabs value={tab} onChange={(e, v) => { tabChanged(v) }}>
         { bundles.map( (bo, idx) => {
           return <Tab label={bo.desc} value={idx} />
         })}
