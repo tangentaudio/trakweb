@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Box, Grid, Typography, Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField } from "@mui/material";
+import { useState, useRef } from 'react';
+import { Box, Grid, Typography, LinearProgress, Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField } from "@mui/material";
 import { CommandInterface, CommandInterfaceEvents, MessageType } from "emulators";
 
 interface SaveProgramProps {
@@ -10,17 +10,15 @@ interface SaveProgramProps {
 
 export default function SaveProgram(props: SaveProgramProps) {
 
-    const [haveProgram, setHaveProgram] = useState<boolean>(false);
+    const serialBuffer = useRef('');
+
+    const [downloading, setDownloading] = useState<boolean>(false);
     const [program, setProgram] = useState<string>('');
     const [programNumber, setProgramNumber] = useState<string>('');
     const [filename, setFilename] = useState<string>('program.' + props.tab);
 
     const download = async () => {
-
-        // CR+LF are swapped on serial output for some reason
-        let prog = program.replace(/\n\r/g, '\r\n');
-
-        const blob: Blob = new Blob([prog], { type: 'text/plain' });
+        const blob: Blob = new Blob([program], { type: 'text/plain' });
 
         const a = document.createElement('a');
         a.download = filename;
@@ -31,28 +29,40 @@ export default function SaveProgram(props: SaveProgramProps) {
         a.click();
     }
     const clear = () => {
+        serialBuffer.current = '';
         setProgram('');
         setProgramNumber('');
         setFilename('');
-        setHaveProgram(false);
+        setDownloading(false);
     }
 
     const processSerialChar = (cv: number) => {
         let c: string = String.fromCharCode(cv);
+        let sbuf = serialBuffer.current;
 
         if (cv === 0x1a) { // ^Z is sent at the end of a program
-            if (program.startsWith('PN')) {
-                let w = program.split(' ');
-                if (w.length >= 1) {
+            console.log(sbuf);
+
+            // CR+LF are swapped on serial output for some reason
+            setProgram(sbuf.replace(/\n\r/g, '\r\n'));
+
+            setDownloading(false);
+        } else {
+            if (sbuf.length == 0)
+                setDownloading(true);
+            else if (sbuf.startsWith('PN') && filename === '') {
+                let w = sbuf.split(' ');
+                if (w.length >= 2) {
+                    console.log(w);
                     let pn: string = w[0].replace('PN', '');
                     setProgramNumber(pn);
                     setFilename(pn + '.' + props.tab);
                 }
             }
-
-            setHaveProgram(true);
-        } else {
-            setProgram(program + c);
+    
+            sbuf = sbuf + c;
+            serialBuffer.current = sbuf;
+            setProgram(sbuf);
         }
     }
 
@@ -60,19 +70,24 @@ export default function SaveProgram(props: SaveProgramProps) {
     props.registerCallback(processSerialChar);
 
     return (
-        <Dialog fullWidth maxWidth='xl' open={haveProgram}>
+        <Dialog scroll='paper' fullWidth maxWidth='xl' open={program.length > 0 || downloading}>
             <DialogTitle>
-                Stored Program {programNumber}
+                {downloading &&
+                    'Receiving Program #' + programNumber + ' (' + program.length + ' bytes)'
+                }
+                {! downloading &&
+                    'Received Program #' + programNumber + ' (' + program.length + ' bytes total)'
+                }
             </DialogTitle>
-            <DialogContent sx={{fontSize: '10pt', fontWeight: 100, fontFamily: 'monospace' }}>
+            <DialogContent sx={{ fontSize: '10pt', fontWeight: 100, fontFamily: 'monospace', minHeight:'400px', maxHeight: '400px' }}>
                 <pre>
                     {program}
                 </pre>
             </DialogContent>
             <DialogActions>
-                <TextField label="Program Filename" value={filename} onChange={(ev) => { setFilename(ev.target.value) }}></TextField>
-                <Button variant="contained" sx={{ width: '200px', border: 'none', clipPath: 'none' }} autoFocus onClick={download}>Download</Button>
-                <Button variant="contained" sx={{ width: '200px', border: 'none', clipPath: 'none' }} color="secondary" onClick={clear}>Clear</Button>
+                <TextField disabled={downloading} label="Download Filename" value={filename} onChange={(ev) => { setFilename(ev.target.value) }}></TextField>
+                <Button disabled={downloading} variant="contained" sx={{ width: '200px', border: 'none', clipPath: 'none' }} autoFocus onClick={download}>Download</Button>
+                <Button disabled={downloading} variant="contained" sx={{ width: '200px', border: 'none', clipPath: 'none' }} color="secondary" onClick={clear}>Clear</Button>
 
             </DialogActions>
         </Dialog>
