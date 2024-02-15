@@ -9,6 +9,11 @@ MX3_SW_URL="https://www.southwesternindustries.com/media/software/mx3_24206.exe?
 MX3_MANUAL_URL="https://www.southwesternindustries.com/media/manuals/20317_manual_CD.pdf?rev=102924"
 MX3_BUNDLE=`pwd`/public/mx3.bundle
 
+MX2_SW_URL="`pwd`/private/mx2_on_mx3.img"
+MX2_MANUAL_URL="https://www.southwesternindustries.com/media/manuals/20317_manual_CD.pdf?rev=102924"
+MX2_BUNDLE=`pwd`/public/mx2.bundle
+
+
 LX2OFF_SW_URL="`pwd`/private/lx2offline.img"
 LX2OFF_MANUAL_URL="https://www.southwesternindustries.com/media/manuals/20099_manual.pdf?rev=153931"
 LX2OFF_BUNDLE=`pwd`/public/lx2offline.bundle
@@ -134,6 +139,12 @@ echo "export const bundles = [" >> bundles.tsx
 
 process_one lx2 "LX2 Lathe" lathe ${LX2_BUNDLE} ${LX2_SW_URL} ${LX2_MANUAL_URL}
 process_one mx3 "MX3 Mill" mill ${MX3_BUNDLE} ${MX3_SW_URL} ${MX3_MANUAL_URL}
+
+if [ -f ${MX2OFF_SW_URL} ];
+then 
+    process_one mx2 "MX2 Mill" mill ${MX2_BUNDLE} ${MX2_SW_URL} ${MX2_MANUAL_URL}
+fi
+
 
 if [ -f ${LX2OFF_SW_URL} ];
 then 

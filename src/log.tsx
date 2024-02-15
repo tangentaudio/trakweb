@@ -26,8 +26,6 @@ export default function Log(props: LogProps) {
     const logEndRef = useRef<HTMLDivElement | null>(null);
     const log = useRef<string>('');
 
-    const logBuffer = useRef('');
-
     const [unread, setUnread] = useState<number>(0);
     const [open, setOpen] = useState<boolean>(false);
 
@@ -42,13 +40,13 @@ export default function Log(props: LogProps) {
     const clear = () => {
         log.current = '';
         setUnread(0);
+        setOpen(false);
     }
 
     const addLogLine = (line: string) => {
         line = line.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
         line = line.replace(/\n/g, '');
         if (line != '[LOG_MISC]') {
-            console.log(line);
             log.current = log.current + line + '\n';
             setUnread(unread + 1);
         }
