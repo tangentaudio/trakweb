@@ -1574,7 +1574,7 @@
 1573:isoDrive::UpdateMscdex\28char\2c\20char\20const*\2c\20unsigned\20char&\29
 1574:isoDrive::ReadCachedSector\28unsigned\20char**\2c\20unsigned\20int\29
 1575:isoDrive::GetDirIterator\28isoDirEntry\20const*\29
-1576:init_block.llvm.3550038766191896992
+1576:init_block.llvm.7104597229678998826
 1577:incrementFDD\28\29
 1578:imageDisk::Write_Sector\28unsigned\20int\2c\20unsigned\20int\2c\20unsigned\20int\2c\20void*\29
 1579:imageDisk::Write_AbsoluteSector\28unsigned\20int\2c\20void*\29
