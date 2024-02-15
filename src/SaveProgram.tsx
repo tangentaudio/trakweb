@@ -1,12 +1,10 @@
 import { useState, useRef } from 'react';
-import { Box, Grid, Typography, LinearProgress, Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField } from "@mui/material";
-import { CommandInterface, CommandInterfaceEvents, MessageType } from "emulators";
+import { Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField } from "@mui/material";
 
 interface SaveProgramProps {
     tab: string,
     registerCallback: Function,
 }
-
 
 export default function SaveProgram(props: SaveProgramProps) {
 
@@ -48,7 +46,7 @@ export default function SaveProgram(props: SaveProgramProps) {
 
             setDownloading(false);
         } else {
-            if (sbuf.length == 0)
+            if (sbuf.length === 0)
                 setDownloading(true);
             else if (sbuf.startsWith('PN') && filename === '') {
                 let w = sbuf.split(' ');
