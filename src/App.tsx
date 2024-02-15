@@ -8,6 +8,7 @@ import KeypadFKeys from './keypad-fkeys';
 import KeypadLathe from './keypad-lathe';
 import KeypadMill from './keypad-mill';
 import SaveProgram from './SaveProgram';
+import Log from './log';
 import { bundles } from './bundles';
 
 
@@ -78,7 +79,8 @@ const theme = createTheme({
 function App() {
   let ci: CommandInterface;
 
-  let serialCallback:Function|null = null;
+  let serialCallback: Function | null = null;
+  let logCallback: Function | null = null;
 
   const lastTabVal = localStorage.getItem('currentTab');
 
@@ -90,32 +92,41 @@ function App() {
     lastTab = 0;
 
   const [tab, setTab] = useState<number>(lastTab);
-  
+
   function sci(p: Promise<CommandInterface>) {
     p.then((cmdifc) => {
       ci = cmdifc;
 
       let evts: CommandInterfaceEvents = ci.events();
-      evts.onStdout( (msg:string) => { console.log(msg);})
-      evts.onMessage( (mt:MessageType, ...args:any) => { 
+      evts.onStdout((msg: string) => {
+        if (logCallback)
+          logCallback(msg);
+      });
+
+      evts.onMessage((mt: MessageType, ...args: any) => {
         if (args && args[0]) {
-          let m:string = args[0];
+          let m: string = args[0];
           if (mt === 'error' && m.startsWith('[LOG_MSG]SerialDummyTransmitByte: 0x')) {
             m = m.replace('[LOG_MSG]SerialDummyTransmitByte: 0x', '');
             let charVal = parseInt(m, 16);
             if (serialCallback)
               serialCallback(charVal);
           } else {
-            console.log(args[0]);
+            if (logCallback)
+              logCallback(args[0]);
           }
         }
-      } );     
+      });
 
     }, () => { console.log("failure to get js-dos command interface") });
   }
 
   function registerSerialCharCallback(f: Function) {
     serialCallback = f;
+  }
+
+  function registerLogCallback(f: Function) {
+    logCallback = f;
   }
 
 
@@ -133,10 +144,10 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Tabs value={tab} onChange={(e, v) => { tabChanged(v) }}>
-        { bundles.map( (bo, idx) => {
+        {bundles.map((bo, idx) => {
           return <Tab label={bo.desc} value={idx} />
         })}
-      
+
       </Tabs>
 
       <Box sx={{
@@ -149,7 +160,7 @@ function App() {
               <Grid item>
                 <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', backgroundColor: '#cccccc' }}>
                   <div className="App" style={{ width: "732px", height: "360px", border: '6px solid black', borderRadius: '15px' }} >
-                    { bundles[tab].bundle &&
+                    {bundles[tab].bundle &&
                       <DosPlayer bundleUrl={bundles[tab].bundle} setCommandInterface={sci} />
                     }
                   </div>
@@ -163,8 +174,11 @@ function App() {
                   <Grid item>
                     <Box component="img" src="protohak.png" sx={{ height: '100px', ml: '10px' }} />
                   </Grid>
-                  <Grid item sx={{ display: 'flex', alignItems: 'flex-end'}}>
-                    <Typography variant="h2" sx={{fontWeight: 900, mb: '-4px' }}>{bundles[tab].desc.toUpperCase()}</Typography>
+                  <Grid item sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <Typography variant="h3" sx={{ fontWeight: 900, mb: '0px' }}>{bundles[tab].desc.toUpperCase()}</Typography>
+                  </Grid>
+                  <Grid item sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <Log registerCallback={registerLogCallback} />
                   </Grid>
                 </Grid>
               </Grid>
@@ -187,18 +201,18 @@ function App() {
 
       <Grid container direction="column" sx={{ mt: '30px', ml: '10px' }}>
         <Grid item>
-          <Typography variant="caption" sx={{fontWeight: '500', color: '#aaaaaa'}}>
+          <Typography variant="caption" sx={{ fontWeight: '500', color: '#aaaaaa' }}>
             TRAK® is a registered trademark of Southwestern Industries.  Original machine software images are available for download on their web site.
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="caption" sx={{fontWeight: '600', color: '#999999' }}>
+          <Typography variant="caption" sx={{ fontWeight: '600', color: '#999999' }}>
             Running 30 year old DOS software in a web browser is made possible through the magic of <Link href="https://js-dos.com/">js-dos v7</Link>, built on a wasm/emscripten version of <Link href="https://www.dosbox.com/">DOSBox</Link>.
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="caption" sx={{fontWeight: '600', color: '#777777' }}>
-          <Link href="https://github.com/tangentaudio/protohak">ProtoHAK</Link> by Steve Richardson (steve.richardson@makeitlabs.com).  For educational and training purposes only - not for commercial use or resale.
+          <Typography variant="caption" sx={{ fontWeight: '600', color: '#777777' }}>
+            <Link href="https://github.com/tangentaudio/protohak">ProtoHAK</Link> by Steve Richardson (steve.richardson@makeitlabs.com).  For educational and training purposes only - not for commercial use or resale.
           </Typography>
         </Grid>
       </Grid>
