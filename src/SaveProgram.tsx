@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField } from "@mui/material";
 
 interface SaveProgramProps {
-    tab: string,
+    id: string,
     registerCallback: Function,
 }
 
@@ -13,7 +13,7 @@ export default function SaveProgram(props: SaveProgramProps) {
     const [downloading, setDownloading] = useState<boolean>(false);
     const [program, setProgram] = useState<string>('');
     const [programNumber, setProgramNumber] = useState<string>('');
-    const [filename, setFilename] = useState<string>('program.' + props.tab);
+    const [filename, setFilename] = useState<string>('program.' + props.id);
 
     const download = async () => {
         const blob: Blob = new Blob([program], { type: 'text/plain' });
@@ -54,7 +54,7 @@ export default function SaveProgram(props: SaveProgramProps) {
                     console.log(w);
                     let pn: string = w[0].replace('PN', '');
                     setProgramNumber(pn);
-                    setFilename(pn + '.' + props.tab);
+                    setFilename(pn + '.' + props.id);
                 }
             }
     

@@ -2,11 +2,10 @@ import { Grid, Button, Box } from "@mui/material";
 import { Keys } from "./keys";
 
 interface KeypadProps {
-    sendKey: any
+    sendKey: Function
 }
 
-
-export default function KeypadMX3(props: KeypadProps) {
+export default function KeypadMill(props: KeypadProps) {
 
     return (
         <Grid item>

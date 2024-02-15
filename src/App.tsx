@@ -5,9 +5,10 @@ import { blue, orange } from '@mui/material/colors';
 import DosPlayer from "./dos-player";
 import { CommandInterface, CommandInterfaceEvents, MessageType } from "emulators";
 import KeypadFKeys from './keypad-fkeys';
-import KeypadLX2 from './keypad-lx2';
-import KeypadMX3 from './keypad-mx3';
+import KeypadLathe from './keypad-lathe';
+import KeypadMill from './keypad-mill';
 import SaveProgram from './SaveProgram';
+import { ObjectFlags } from 'typescript';
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
@@ -76,9 +77,14 @@ const theme = createTheme({
 function App() {
   let ci: CommandInterface;
 
-  let serialCallback:any = null;
+  let serialCallback:Function|null = null;
 
-  const [tab, setTab] = useState<string>('lx2');
+  const bundles = [
+    {id: 'lx2', desc: 'LX2 Lathe', bundle: 'lx2.bundle', keypad: 'lathe'},
+    {id: 'mx3', desc: 'MX3 Mill', bundle: 'mx3.bundle', keypad: 'mill'},
+  ];
+
+  const [tab, setTab] = useState<number>(0);
   
 
   function sci(p: Promise<CommandInterface>) {
@@ -86,7 +92,6 @@ function App() {
       ci = cmdifc;
 
       let evts: CommandInterfaceEvents = ci.events();
-      //evts.onStdout( (msg) => { console.log('STDOUT>> ' + msg); } );     
       evts.onMessage( (mt:MessageType, ...args:any) => { 
         if (args && args[0]) {
           let m:string = args[0];
@@ -99,7 +104,7 @@ function App() {
         }
       } );     
 
-    }, () => { console.log("failure") });
+    }, () => { console.log("failure to get js-dos command interface") });
   }
 
   function registerSerialCharCallback(f: Function) {
@@ -116,8 +121,10 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Tabs value={tab} onChange={(e, v) => { setTab(v) }}>
-        <Tab label="MX3 Mill" value="mx3" />
-        <Tab label="LX2 Lathe" value="lx2" />
+        { bundles.map( (bo, idx) => {
+          return <Tab label={bo.desc} value={idx} />
+        })}
+      
       </Tabs>
 
       <Box sx={{
@@ -130,7 +137,7 @@ function App() {
               <Grid item>
                 <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', backgroundColor: '#cccccc' }}>
                   <div className="App" style={{ width: "732px", height: "360px", border: '6px solid black', borderRadius: '15px' }} >
-                    <DosPlayer bundleUrl={tab + '.bundle'} setCommandInterface={sci} />
+                    <DosPlayer bundleUrl={bundles[tab].bundle} setCommandInterface={sci} />
                   </div>
                   <div style={{ marginLeft: '6px' }}>
                     <KeypadFKeys sendKey={sendKey} />
@@ -143,7 +150,7 @@ function App() {
                     <Box component="img" src="protohak.png" sx={{ height: '100px', ml: '10px' }} />
                   </Grid>
                   <Grid item sx={{ display: 'flex', alignItems: 'flex-end'}}>
-                    <Typography variant="h2" sx={{fontWeight: 900, mb: '-4px' }}>{tab?.toUpperCase()}</Typography>
+                    <Typography variant="h2" sx={{fontWeight: 900, mb: '-4px' }}>{bundles[tab].desc.toUpperCase()}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -151,33 +158,33 @@ function App() {
           </Grid>
           <Grid item>
             <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', ml: '10px', mb: '20px', backgroundColor: '#cccccc' }}>
-              {tab === 'lx2' &&
-                <KeypadLX2 sendKey={sendKey} />
+              {bundles[tab].keypad === 'lathe' &&
+                <KeypadLathe sendKey={sendKey} />
               }
-              {tab === 'mx3' &&
-                <KeypadMX3 sendKey={sendKey} />
+              {bundles[tab].keypad === 'mill' &&
+                <KeypadMill sendKey={sendKey} />
               }
             </Box>
           </Grid>
         </Grid>
       </Box>
 
-      <SaveProgram tab={tab} registerCallback={registerSerialCharCallback} />
+      <SaveProgram id={bundles[tab].id} registerCallback={registerSerialCharCallback} />
 
       <Grid container direction="column" sx={{ mt: '30px', ml: '10px' }}>
         <Grid item>
           <Typography variant="caption" sx={{fontWeight: '500', color: '#aaaaaa'}}>
-            TRAK® is a registered trademark of Southwestern Industries.  Unmodified original machine software images are available on their web site.
+            TRAK® is a registered trademark of Southwestern Industries.  Original machine software images are available for download on their web site.
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant="caption" sx={{fontWeight: '600', color: '#999999' }}>
-            30 year old DOS software in a web browser is made possible through the magic of <Link href="https://js-dos.com/">js-dos v7</Link>, built on a wasm/emscripten version of <Link href="https://www.dosbox.com/">DOSBox</Link>.
+            Running 30 year old DOS software in a web browser is made possible through the magic of <Link href="https://js-dos.com/">js-dos v7</Link>, built on a wasm/emscripten version of <Link href="https://www.dosbox.com/">DOSBox</Link>.
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant="caption" sx={{fontWeight: '600', color: '#777777' }}>
-          <Link href="https://github.com/tangentaudio/protohak">ProtoHAK</Link> is for educational and training purposes only - not for commercial use or resale.
+          <Link href="https://github.com/tangentaudio/protohak">ProtoHAK</Link> by Steve Richardson (steve.richardson@makeitlabs.com).  For educational and training purposes only - not for commercial use or resale.
           </Typography>
         </Grid>
       </Grid>
