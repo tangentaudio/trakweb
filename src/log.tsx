@@ -44,7 +44,8 @@ export default function Log(props: LogProps) {
     }
 
     const addLogLine = (line: string) => {
-        line = line.replace(/[\\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+        // eslint-disable-next-line
+        line = line.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
         line = line.replace(/\n/g, '');
         if (line !== '[LOG_MISC]') {
             log.current = log.current + line + '\n';
