@@ -4,13 +4,14 @@ import { Link, Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } fr
 import { blue, orange } from '@mui/material/colors';
 import DosPlayer from "./dos-player";
 import { CommandInterface, CommandInterfaceEvents, MessageType } from "emulators";
+import { } from "emulators-ui";
 import KeypadFKeys from './keypad-fkeys';
 import KeypadLathe from './keypad-lathe';
 import KeypadMill from './keypad-mill';
 import SaveProgram from './SaveProgram';
 import Log from './log';
 import { bundles } from './bundles';
-
+import GitInfo from 'react-git-info/macro';
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
@@ -77,6 +78,9 @@ const theme = createTheme({
 
 
 function App() {
+  const gitInfo = GitInfo();
+  const buildVersion = 'git ' + gitInfo.commit.shortHash + ' ' + gitInfo.commit.date;
+
   let ci: CommandInterface;
 
   let serialCallback: Function | null = null;
@@ -98,7 +102,7 @@ function App() {
       ci = cmdifc;
 
       let evts: CommandInterfaceEvents = ci.events();
-      
+
       evts.onStdout((msg: string) => {
         if (logCallback)
           logCallback(msg);
@@ -145,9 +149,10 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
 
-    <div style={{ display: 'block', float: 'right', padding: '6px'}}>
-                    <Log registerCallback={registerLogCallback} />
-                    </div>
+      <div style={{ display: 'block', float: 'right', padding: '6px' }}>
+        <Typography variant="caption" sx={{color: '#aaaaaa'}}>{buildVersion}</Typography>
+        <Log registerCallback={registerLogCallback} />
+      </div>
 
       <Tabs value={tab} onChange={(e, v) => { tabChanged(v) }}>
         {bundles.map((bo, idx) => {
@@ -166,9 +171,7 @@ function App() {
               <Grid item>
                 <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', backgroundColor: '#cccccc' }}>
                   <div className="App" style={{ width: "732px", height: "360px", border: '6px solid black', borderRadius: '15px' }} >
-                    {bundles[tab].bundle &&
-                      <DosPlayer bundleUrl={bundles[tab].bundle} setCommandInterface={sci} />
-                    }
+                    <DosPlayer bundleUrl={bundles[tab].bundle} setCommandInterface={sci} />
                   </div>
                   <div style={{ marginLeft: '6px' }}>
                     <KeypadFKeys sendKey={sendKey} />

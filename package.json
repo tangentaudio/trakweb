@@ -23,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
     "react-scripts": "5.0.1",
+    "save": "^2.9.0",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
@@ -49,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-git-info": "^2.0.1"
   }
 }
