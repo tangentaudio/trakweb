@@ -15,8 +15,8 @@ export default function KeypadLathe(props: KeypadProps) {
               <Grid container direction="row" spacing="1px">
                 <Grid item><Tooltip enterDelay={2500} title="Initiates motion in Run" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_g) }}>GO</Button></Tooltip></Grid>
                 <Grid item><Tooltip enterDelay={2500} title="Halts motion during Run" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_s) }}>STOP</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Feedrate override to increase feed rate" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_up) }}>FEED ⬆</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Feedrate override to decrease feed rate" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_down) }}>FEED ⬇</Button></Tooltip></Grid>
+                <Grid item><Tooltip enterDelay={2500} title="Feedrate override to increase feed rate" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_up) }}>FEED 🡅</Button></Tooltip></Grid>
+                <Grid item><Tooltip enterDelay={2500} title="Feedrate override to decrease feed rate" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_down) }}>FEED 🡇</Button></Tooltip></Grid>
               </Grid>
             </Grid>
             <Grid item>
@@ -24,7 +24,7 @@ export default function KeypadLathe(props: KeypadProps) {
                 <Grid item><Tooltip enterDelay={2500} title="Change from one mode of operation to another" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_m) }}>MODE</Button></Tooltip></Grid>
                 <Grid item><Tooltip enterDelay={2500} title="Switches both or one axis from incremental to absolute or vice versa" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_leftbracket) }}>INC/ABS</Button></Tooltip></Grid>
                 <Grid item><Tooltip enterDelay={2500} title="Switches between English and Metric display" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_rightbracket) }}>IN/MM</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Not used" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_kpmultiply) }}>LOOK</Button></Tooltip></Grid>
+                <Grid item><Tooltip enterDelay={2500} title="Not used" arrow><Button disabled variant="contained" onClick={() => { props.sendKey(Keys.KBD_kpmultiply) }}>LOOK</Button></Tooltip></Grid>
               </Grid>
             </Grid>
             <Grid item>

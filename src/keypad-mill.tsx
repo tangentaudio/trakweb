@@ -14,8 +14,8 @@ export default function KeypadMill(props: KeypadProps) {
               <Grid container direction="row" spacing="1px">
                 <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_g) }}>GO</Button></Tooltip></Grid>
                 <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_s) }}>STOP</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_up) }}>FEED ⬆</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_down) }}>FEED ⬇</Button></Tooltip></Grid>
+                <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_up) }}>FEED 🡅</Button></Tooltip></Grid>
+                <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_down) }}>FEED 🡇</Button></Tooltip></Grid>
               </Grid>
             </Grid>
             <Grid item>
@@ -23,7 +23,7 @@ export default function KeypadMill(props: KeypadProps) {
                 <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_m) }}>MODE</Button></Tooltip></Grid>
                 <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_leftbracket) }}>INC/ABS</Button></Tooltip></Grid>
                 <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_rightbracket) }}>IN/MM</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_kpmultiply) }}>*</Button></Tooltip></Grid>
+                <Grid item><Tooltip enterDelay={2500} title="" arrow><Button disabled variant="contained" onClick={() => { props.sendKey(Keys.KBD_kpmultiply) }}>*</Button></Tooltip></Grid>
               </Grid>
             </Grid>
             <Grid item>
