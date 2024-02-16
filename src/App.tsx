@@ -144,6 +144,11 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+
+    <div style={{ display: 'block', float: 'right', padding: '6px'}}>
+                    <Log registerCallback={registerLogCallback} />
+                    </div>
+
       <Tabs value={tab} onChange={(e, v) => { tabChanged(v) }}>
         {bundles.map((bo, idx) => {
           return <Tab label={bo.desc} value={idx} />
@@ -177,9 +182,6 @@ function App() {
                   </Grid>
                   <Grid item sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <Typography variant="h3" sx={{ fontWeight: 900, mb: '0px' }}>{bundles[tab].desc.toUpperCase()}</Typography>
-                  </Grid>
-                  <Grid item sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                    <Log registerCallback={registerLogCallback} />
                   </Grid>
                 </Grid>
               </Grid>
