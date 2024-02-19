@@ -4,12 +4,11 @@ import { Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@m
 import { blue, blueGrey } from '@mui/material/colors';
 import DosPlayer from "./dos-player";
 import { CommandInterface, CommandInterfaceEvents, MessageType } from "emulators";
-import { } from "emulators-ui";
 import KeypadFKeys from './keypad-fkeys';
 import KeypadLathe from './keypad-lathe';
 import KeypadMill from './keypad-mill';
 import SerialSave from './SerialSave';
-import FileSave from './FileSave';
+import FileManager from './FileManager';
 import Log from './log';
 import { bundles } from './bundles';
 import GitInfo from 'react-git-info/macro';
@@ -24,15 +23,6 @@ const theme = createTheme({
   palette: {
     primary: blue,
     secondary: blueGrey,
-    action: {
-      active: blue[200],
-      hover: blue[100],
-      hoverOpacity: 0.7,
-      focus: blue[600],
-      focusOpacity: 1,
-      selected: blue[300],
-      selectedOpacity: 1
-    },
   },
   components: {
     MuiButton: {
@@ -188,7 +178,7 @@ function App() {
                       {process.env.NODE_ENV === 'development' &&
                         <Log registerCallback={registerLogCallback} />
                       }
-                      <FileSave getCommandInterface={getCommandInterface} />
+                      <FileManager getCommandInterface={getCommandInterface} bundleUrl={bundles[tab].bundle}/>
                     </Box>
                   </Grid>
                 </Grid>

@@ -5,7 +5,7 @@ declare const Dos: DosPlayerFactoryType;
 
 interface PlayerProps {
     bundleUrl: string;
-    setCommandInterface: any;
+    setCommandInterface: Function;
 }
 
 export default function DosPlayer(props: PlayerProps) {
@@ -39,6 +39,7 @@ export default function DosPlayer(props: PlayerProps) {
         if (dos !== null) {
             const ci = dos.run(props.bundleUrl); // ci is returned
             props.setCommandInterface(ci);
+            
         }
     }, [dos, props]);
 
