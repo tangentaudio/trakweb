@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react';
+import { styled } from '@mui/material/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button, Dialog, DialogActions, DialogTitle, DialogContent } from "@mui/material";
 import Badge from '@mui/material/Badge';
 import SaveIcon from '@mui/icons-material/Save';
 import { CommandInterface } from "emulators";
 import JSZip from "jszip";
 import IconDownload from '@mui/icons-material/Download';
+import IconUpload from '@mui/icons-material/UploadFile';
 import { makeCache } from "./cache";
 
 const cacheName = "emulators-ui-saves";
@@ -12,9 +14,22 @@ const cachePromise = makeCache(cacheName, {
     onErr: console.error,
 });
 
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
+
 interface FileManagerProps {
     getCommandInterface: Function,
-    bundleUrl: string
+    bundleUrl: string,
+    restartCallback: Function
 }
 
 export default function FileManager(props: FileManagerProps) {
@@ -27,11 +42,11 @@ export default function FileManager(props: FileManagerProps) {
     const zipobj = useRef<JSZip | null>(null);
 
 
-    function handleFileBrowse(e:React.ChangeEvent<HTMLInputElement>) {
+    function handleFileBrowse(e: React.ChangeEvent<HTMLInputElement>) {
     }
 
 
-    const saveToCache = async (e:React.ChangeEvent<HTMLInputElement>) => {
+    const saveToCache = async (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log('saveToCache bundle name=', props.bundleUrl);
         if (!zipobj.current || !e.target.files)
             return;
@@ -39,16 +54,18 @@ export default function FileManager(props: FileManagerProps) {
         const cache = await cachePromise;
 
         console.log(e.target.files);
-        let f = e.target.files[0];
+        for (let i = 0; i < e.target.files.length; i++) {
+            let f = e.target.files.item(i);
+            if (f) {
+                zipobj.current.file(f.name, f);
+                setUnsaved(unsaved + 1);
+            }
+        }
 
-            zipobj.current.file(f.name, f);
-            console.log(f);
-
-        //zipobj.current.file("2112.LX2", "Hello World\n");
 
         onOpen();
 
-        const newfs = await zipobj.current.generateAsync({type: "uint8array"});
+        const newfs = await zipobj.current.generateAsync({ type: "uint8array" });
 
         console.log('newfs=', newfs.buffer);
 
@@ -111,7 +128,7 @@ export default function FileManager(props: FileManagerProps) {
     return (
         <>
             <IconButton onClick={onOpen} >
-                <Badge badgeContent={unsaved}>
+                <Badge badgeContent={unsaved} color="secondary">
                     <SaveIcon color="primary" />
                 </Badge>
             </IconButton>
@@ -142,7 +159,20 @@ export default function FileManager(props: FileManagerProps) {
                     </TableContainer>
                 </DialogContent>
                 <DialogActions>
-                    <input type="file" onChange={saveToCache}/>
+                    { unsaved > 0 &&
+                        <Button sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color="error" onClick={ () => { props.restartCallback(); setUnsaved(0); onClose(); }} >Restart</Button>
+                    }
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="outlined"
+                        tabIndex={-1}
+                        startIcon={<IconUpload/>}
+                        sx={{ width: '150px', height: '40px', border: 'none', clipPath: 'none' }} 
+                    >
+                        Add File
+                        <VisuallyHiddenInput type="file" onChange={saveToCache}/>
+                    </Button>
                     <Button variant="contained" sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color="primary" onClick={() => { onClose() }}>Close</Button>
                 </DialogActions>
             </Dialog>

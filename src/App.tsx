@@ -87,6 +87,7 @@ function App() {
     lastTab = 0;
 
   const [tab, setTab] = useState<number>(lastTab);
+  const [restarts, setRestarts] = useState<number>(0);
 
   function sci(p: Promise<CommandInterface>) {
     p.then((cmdifc) => {
@@ -129,11 +130,14 @@ function App() {
     return ci;
   }
 
-
   function sendKeyEvent(kcode: number, pressed: boolean) {
     if (ci !== null) {
       ci.sendKeyEvent(kcode, pressed);
     }
+  }
+
+  function restart() {
+    setRestarts(restarts + 1);
   }
 
   function tabChanged(v: number) {
@@ -178,7 +182,7 @@ function App() {
                       {process.env.NODE_ENV === 'development' &&
                         <Log registerCallback={registerLogCallback} />
                       }
-                      <FileManager getCommandInterface={getCommandInterface} bundleUrl={bundles[tab].bundle}/>
+                      <FileManager getCommandInterface={getCommandInterface} bundleUrl={bundles[tab].bundle} restartCallback={restart}/>
                     </Box>
                   </Grid>
                 </Grid>
