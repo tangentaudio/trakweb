@@ -151,7 +151,9 @@ function App() {
 
       <div style={{ display: 'block', float: 'right', padding: '6px' }}>
         <Typography variant="caption" sx={{color: '#aaaaaa'}}>{buildVersion}</Typography>
-        <Log registerCallback={registerLogCallback} />
+        { process.env.NODE_ENV === 'development' &&
+          <Log registerCallback={registerLogCallback} />
+        }
       </div>
 
       <Tabs value={tab} onChange={(e, v) => { tabChanged(v) }}>
