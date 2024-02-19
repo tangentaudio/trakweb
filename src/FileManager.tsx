@@ -1,12 +1,13 @@
 import { useState, useRef } from 'react';
 import { styled } from '@mui/material/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button, Dialog, DialogActions, DialogTitle, DialogContent } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button, Dialog, DialogActions, DialogTitle, DialogContent, Tooltip } from "@mui/material";
 import Badge from '@mui/material/Badge';
 import SaveIcon from '@mui/icons-material/Save';
 import { CommandInterface } from "emulators";
 import JSZip from "jszip";
 import IconDownload from '@mui/icons-material/Download';
 import IconUpload from '@mui/icons-material/UploadFile';
+import IconDelete from '@mui/icons-material/DeleteForever';
 import { makeCache } from "./cache";
 
 const cacheName = "emulators-ui-saves";
@@ -41,17 +42,11 @@ export default function FileManager(props: FileManagerProps) {
 
     const zipobj = useRef<JSZip | null>(null);
 
-
-    function handleFileBrowse(e: React.ChangeEvent<HTMLInputElement>) {
-    }
-
-
-    const saveToCache = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log('saveToCache bundle name=', props.bundleUrl);
         if (!zipobj.current || !e.target.files)
             return;
 
-        const cache = await cachePromise;
 
         console.log(e.target.files);
         for (let i = 0; i < e.target.files.length; i++) {
@@ -62,18 +57,33 @@ export default function FileManager(props: FileManagerProps) {
             }
         }
 
-
         onOpen();
+        saveToCache();
+    }
 
+    const saveToCache = async () => {
+        if (!zipobj.current)
+            return;
+        const cache = await cachePromise;
         const newfs = await zipobj.current.generateAsync({ type: "uint8array" });
-
         console.log('newfs=', newfs.buffer);
-
         cache.put(props.bundleUrl + ".changes", newfs.buffer);
     }
 
+
+    const erase = async (filename: string) => {
+        if (!zipobj.current)
+            return;
+        console.log('erase', filename);
+
+        zipobj.current.remove(filename);
+        setUnsaved(unsaved + 1);
+
+        onOpen();
+        saveToCache();
+    }
+
     const download = async (filename: string) => {
-        console.log('download', filename);
         if (!zipobj.current)
             return;
 
@@ -149,9 +159,20 @@ export default function FileManager(props: FileManagerProps) {
                             <TableBody>
                                 {fileList.map((f) => (
                                     <TableRow key={f.name}>
-                                        <TableCell>{f.name}</TableCell>
+                                        <TableCell sx={{fontFamily: "monospace", fontWeight: 900}}>{f.name}</TableCell>
                                         <TableCell>{f.date.toLocaleString()}</TableCell>
-                                        <TableCell><IconButton onClick={(e) => { download(f.name) }}><IconDownload /></IconButton></TableCell>
+                                        <TableCell>
+                                            <Tooltip title="Download to your Downloads folder." enterDelay={1500}>
+                                                <IconButton color="primary" onClick={(e) => { download(f.name) }}>
+                                                    <IconDownload />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Delete this file from the simulator C: drive." enterDelay={1500}>
+                                                <IconButton color="error" onClick={(e) => { erase(f.name) }}>
+                                                    <IconDelete />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -162,17 +183,19 @@ export default function FileManager(props: FileManagerProps) {
                     { unsaved > 0 &&
                         <Button sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color="error" onClick={ () => { props.restartCallback(); setUnsaved(0); onClose(); }} >Restart</Button>
                     }
-                    <Button
-                        component="label"
-                        role={undefined}
-                        variant="outlined"
-                        tabIndex={-1}
-                        startIcon={<IconUpload/>}
-                        sx={{ width: '150px', height: '40px', border: 'none', clipPath: 'none' }} 
-                    >
-                        Add File
-                        <VisuallyHiddenInput type="file" onChange={saveToCache}/>
-                    </Button>
+                    <Tooltip title="Upload from your Downloads folder to the simulator C: drive." enterDelay={1500}>
+                        <Button
+                            component="label"
+                            role={undefined}
+                            variant="outlined"
+                            tabIndex={-1}
+                            startIcon={<IconUpload/>}
+                            sx={{ width: '150px', height: '40px', border: 'none', clipPath: 'none' }} 
+                        >
+                            Add File
+                            <VisuallyHiddenInput type="file" onChange={uploadFiles}/>
+                        </Button>
+                    </Tooltip>
                     <Button variant="contained" sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color="primary" onClick={() => { onClose() }}>Close</Button>
                 </DialogActions>
             </Dialog>
