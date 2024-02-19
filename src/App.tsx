@@ -135,9 +135,9 @@ function App() {
   }
 
 
-  function sendKey(kcode: number) {
+  function sendKeyEvent(kcode: number, pressed: boolean) {
     if (ci !== null) {
-      ci.simulateKeyPress(kcode);
+      ci.sendKeyEvent(kcode, pressed);
     }
   }
 
@@ -174,7 +174,7 @@ function App() {
                     <DosPlayer bundleUrl={bundles[tab].bundle} setCommandInterface={sci} />
                   </div>
                   <div style={{ marginLeft: '6px' }}>
-                    <KeypadFKeys sendKey={sendKey} />
+                    <KeypadFKeys sendKeyEvent={sendKeyEvent}/>
                   </div>
                 </Box>
               </Grid>
@@ -193,10 +193,10 @@ function App() {
           <Grid item>
             <Box sx={{ border: '4px solid black', borderRadius: '20px', padding: '12px', ml: '10px', mb: '20px', backgroundColor: '#cccccc' }}>
               {bundles[tab].keypad === 'lathe' &&
-                <KeypadLathe sendKey={sendKey} />
+                <KeypadLathe sendKeyEvent={sendKeyEvent} />
               }
               {bundles[tab].keypad === 'mill' &&
-                <KeypadMill sendKey={sendKey} />
+                <KeypadMill sendKeyEvent={sendKeyEvent} />
               }
             </Box>
           </Grid>

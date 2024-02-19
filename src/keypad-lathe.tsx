@@ -1,81 +1,85 @@
-import { Grid, Button, Box, Tooltip } from "@mui/material";
+import { useState } from 'react';
+
+import { Grid, Box, Button, Switch, Typography } from "@mui/material";
 import { Keys } from "./keys";
+import KeypadButton from "./keypad-button";
 
 interface KeypadProps {
-    sendKey: Function
+  sendKeyEvent: Function
 }
 
 
 export default function KeypadLathe(props: KeypadProps) {
+  const [tipsEnabled, setTipsEnabled] = useState<boolean>(false);
 
-    return (
+  return (
+    <Grid item>
+      <Grid container direction="column" spacing="1px">
         <Grid item>
-          <Grid container direction="column" spacing="1px">
-            <Grid item>
-              <Grid container direction="row" spacing="1px">
-                <Grid item><Tooltip enterDelay={2500} title="Initiates motion in Run" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_g) }}>GO</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Halts motion during Run" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_s) }}>STOP</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Feedrate override to increase feed rate" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_up) }}>FEED 🡅</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Feedrate override to decrease feed rate" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_down) }}>FEED 🡇</Button></Tooltip></Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="row" spacing="1px">
-                <Grid item><Tooltip enterDelay={2500} title="Change from one mode of operation to another" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_m) }}>MODE</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Switches both or one axis from incremental to absolute or vice versa" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_leftbracket) }}>INC/ABS</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Switches between English and Metric display" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_rightbracket) }}>IN/MM</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Not used" arrow><Button disabled variant="contained" onClick={() => { props.sendKey(Keys.KBD_kpmultiply) }}>LOOK</Button></Tooltip></Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="row" spacing="1px" height="40px">
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="row" spacing="1px">
-                <Grid item><Box sx={{width: '70px'}}/></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Loads incremental dimensions and general data" arrow><Button variant="contained" color="secondary"  onClick={() => { props.sendKey(Keys.KBD_i) }}>INC SET</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Loads absolute dimensions and general data" arrow><Button variant="contained" color="secondary"  onClick={() => { props.sendKey(Keys.KBD_a) }}>ABS SET</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Opens the PDF operator's manual in another window" arrow><Button sx={{border: 'none', color: '#000000'}}  onClick={() => { window.open('lx2.pdf', '_blank') }}>Help</Button></Tooltip></Grid>
-
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="row" spacing="1px">
-                <Grid item><Tooltip enterDelay={2500} title="Selects X axis for subsequent commands" arrow><Button variant="contained" color="secondary" onClick={() => { props.sendKey(Keys.KBD_x) }}>X</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_7) }}>7</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_8) }}>8</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_9) }}>9</Button></Tooltip></Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="row" spacing="1px">
-                <Grid item><Tooltip enterDelay={2500} title="Selects Z axis for subsequent commands" arrow><Button variant="contained" color="secondary" onClick={() => { props.sendKey(Keys.KBD_y) }}>Z</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_4) }}>4</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_5) }}>5</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_6) }}>6</Button></Tooltip></Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="row" spacing="1px">
-                <Grid item><Tooltip enterDelay={2500} title="Switches between fine and coarse modes for DRO and TRAKing" arrow><Button variant="contained" color="secondary" onClick={() => { props.sendKey(Keys.KBD_z) }}>F/C</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_1) }}>1</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_2) }}>2</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_3) }}>3</Button></Tooltip></Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="row" spacing="1px">
-                <Grid item><Tooltip enterDelay={2500} title="Restore; clears an entry and aborts keying procedure" arrow><Button variant="contained" color="secondary" onClick={() => { props.sendKey(Keys.KBD_esc) }}>RSTR</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Data is automatically positive (+) unless this key is pressed" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_minus) }}>+/-</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_0) }}>0</Button></Tooltip></Grid>
-                <Grid item><Tooltip enterDelay={2500} title="Numeric input, decimal point" arrow><Button variant="contained" onClick={() => { props.sendKey(Keys.KBD_period) }}>.</Button></Tooltip></Grid>
-              </Grid>
-            </Grid>
+          <Grid container direction="row" spacing="1px">
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_g} label="GO" tooltip="Initiates motion in RUN" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_s} label="STOP" tooltip="Halts motion during RUN" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_up} label="FEED 🡅" tooltip="Feedrate override to increase feed rate" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_down} label="FEED 🡇" tooltip="Feedrate override to decrease feed rate" tipsEnabled={tipsEnabled} /></Grid>
           </Grid>
         </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing="1px">
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_m} label="MODE" tooltip="Change from one mode of operation to another" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_leftbracket} label="INC/ABS" tooltip="Switches both or one axis from incremental to absolute or vice versa" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_rightbracket} label="IN/MM" tooltip="Switches between English and Metric display" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_kpmultiply} label="LOOK" tooltip="Not used on lathe." tipsEnabled={tipsEnabled} /></Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing="1px" height="40px">
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing="1px">
+            <Grid item><Box sx={{ width: '70px', display: 'block', textAlign: 'center' }}><Switch size="small" checked={tipsEnabled} onChange={() => { setTipsEnabled(!tipsEnabled) }} /><Typography variant="subtitle2" sx={{width:'70px'}} textAlign="center">TIPS</Typography></Box></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_i} label="INC SET" altColor tooltip="Loads incremental dimensions and general data" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_a} label="ABS SET" altColor tooltip="Loads absolute dimensions and general data" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><Button sx={{ border: 'none', color: '#000000' }} onClick={() => { window.open('lx2.pdf', '_blank') }}>Help</Button></Grid>
+
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing="1px">
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_x} label="X" altColor tooltip="Selects X axis for subsequent commands" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_7} label="7" tooltip="Numeric input (SEVEN)" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_8} label="8" tooltip="Numeric input (EIGHT)" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_9} label="9" tooltip="Numeric input (NINE)" tipsEnabled={tipsEnabled} /></Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing="1px">
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_y} label="Z" altColor tooltip="Selects Z axis for subsequent commands" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_4} label="4" tooltip="Numeric input (FOUR)" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_5} label="5" tooltip="Numeric input (FIVE)" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_6} label="6" tooltip="Numeric input (SIX)" tipsEnabled={tipsEnabled} /></Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing="1px">
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_NONE} label="F/C" altColor tooltip="Switches between fine and coarse modes for DRO and TRAKing (no function in offline mode)" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_1} label="1" tooltip="Numeric input (ONE)" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_2} label="2" tooltip="Numeric input (TWO)" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_3} label="3" tooltip="Numeric input (THREE)" tipsEnabled={tipsEnabled} /></Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing="1px">
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_esc} label="RSTR" altColor tooltip="Restore; clears an entry and aborts keying procedure" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_minus} label="+/-" tooltip="Data is automatically positive (+) unless this key is pressed" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_0} label="0" tooltip="Numeric input (ZERO)" tipsEnabled={tipsEnabled} /></Grid>
+            <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_period} label="." tooltip="Numeric input (DECIMAL POINT)" tipsEnabled={tipsEnabled} /></Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
 
 
-    );
+  );
 
 }
