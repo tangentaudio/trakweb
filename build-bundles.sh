@@ -26,7 +26,7 @@ AGE2OFF_SW_URL="`pwd`/private/age2offline.img"
 AGE2OFF_MANUAL_URL="https://www.southwesternindustries.com/media/manuals/20099_manual.pdf?rev=153931"
 AGE2OFF_BUNDLE=`pwd`/public/age2offline.bundle
 
-AGE3OFF=yes
+AGE3OFF=no
 AGE3OFF_SW_URL="`pwd`/private/age3offline.img"
 AGE3OFF_MANUAL_URL="https://www.southwesternindustries.com/media/manuals/20099_manual.pdf?rev=153931"
 AGE3OFF_BUNDLE=`pwd`/public/age3offline.bundle

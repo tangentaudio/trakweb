@@ -58,8 +58,8 @@ export default function Log(props: LogProps) {
     return (
         <>
             <IconButton onClick={() => { setOpen(true); setUnread(0); }}>
-                <Badge badgeContent={unread} color="primary">
-                    <LogIcon color="inherit"/>
+                <Badge badgeContent={unread} color="secondary">
+                    <LogIcon color="primary"/>
                 </Badge>
             </IconButton>
             <Dialog scroll='paper' fullWidth maxWidth='sm' open={open} PaperComponent={DraggablePaper}>

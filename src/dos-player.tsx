@@ -21,10 +21,12 @@ export default function DosPlayer(props: PlayerProps) {
             return;
         }
 
-        const o: DosPlayerOptions = { noSideBar: true, style: 'none', noFullscreen: true, preventUnload: true, noSocialLinks: true };
+        const o: DosPlayerOptions = { style: 'none', noSideBar: true, noFullscreen: true, preventUnload: true, noSocialLinks: true };
 
         const root = rootRef.current as HTMLDivElement;
         const instance = Dos(root, o);
+        
+
 
         setDos(instance);
 

@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import './App.css';
-import { Link, Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@mui/material';
-import { blue, orange } from '@mui/material/colors';
+import { Box, Grid, createTheme, ThemeProvider, Typography, Tabs, Tab } from '@mui/material';
+import { blue, blueGrey } from '@mui/material/colors';
 import DosPlayer from "./dos-player";
 import { CommandInterface, CommandInterfaceEvents, MessageType } from "emulators";
 import { } from "emulators-ui";
 import KeypadFKeys from './keypad-fkeys';
 import KeypadLathe from './keypad-lathe';
 import KeypadMill from './keypad-mill';
-import SaveProgram from './SaveProgram';
+import SerialSave from './SerialSave';
+import FileSave from './FileSave';
 import Log from './log';
 import { bundles } from './bundles';
 import GitInfo from 'react-git-info/macro';
@@ -22,7 +23,7 @@ declare module '@mui/material/Button' {
 const theme = createTheme({
   palette: {
     primary: blue,
-    secondary: orange,
+    secondary: blueGrey,
     action: {
       active: blue[200],
       hover: blue[100],
@@ -134,6 +135,10 @@ function App() {
     logCallback = f;
   }
 
+  function getCommandInterface(): CommandInterface {
+    return ci;
+  }
+
 
   function sendKeyEvent(kcode: number, pressed: boolean) {
     if (ci !== null) {
@@ -149,25 +154,17 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
 
-      <div style={{ display: 'block', float: 'right', padding: '6px' }}>
-        <Typography variant="caption" sx={{ color: '#aaaaaa' }}>{buildVersion}</Typography>
-        {process.env.NODE_ENV === 'development' &&
-          <Log registerCallback={registerLogCallback} />
-        }
-      </div>
-
       <Tabs value={tab} onChange={(e, v) => { tabChanged(v) }}>
         {bundles.map((bo, idx) => {
-          return <Tab label={bo.desc} value={idx} />
+          return <Tab label={bo.desc} value={idx} key={idx} />
         })}
-
       </Tabs>
 
       <Box sx={{
         border: '8px solid black', borderRadius: '30px', padding: '6px', mt: '15px', ml: '10px', backgroundColor: '#eeeeee', maxWidth: '1170px',
         filter: 'drop-shadow(20px 20px 8px #333333)'
       }}>
-        <Grid container direction="row" spacing={2} sx={{ width: '100%', pl: '20px', pt: '20px' }}>
+        <Grid container direction="row" spacing={2} sx={{ width: '100%', pl: '20px', pt: '0px' }}>
           <Grid item>
             <Grid container direction="column" spacing="1px">
               <Grid item>
@@ -187,6 +184,12 @@ function App() {
                   </Grid>
                   <Grid item sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <Typography variant="h3" sx={{ fontWeight: 900, mb: '0px' }}>{bundles[tab].desc.toUpperCase()}</Typography>
+                    <Box style={{ display: 'block', float: 'right', padding: '0px', paddingRight: '20px', margin: '0px' }}>
+                      {process.env.NODE_ENV === 'development' &&
+                        <Log registerCallback={registerLogCallback} />
+                      }
+                      <FileSave getCommandInterface={getCommandInterface} />
+                    </Box>
                   </Grid>
                 </Grid>
               </Grid>
@@ -211,10 +214,11 @@ function App() {
         </Grid>
       </Box>
 
-      <SaveProgram id={bundles[tab].id} registerCallback={registerSerialCharCallback} />
+      <SerialSave id={bundles[tab].id} registerCallback={registerSerialCharCallback} />
 
       <Grid container direction="column" sx={{ mt: '30px', ml: '10px' }}>
         <Grid item>
+          <Typography variant="caption" sx={{ color: '#aaaaaa' }}>Version: {buildVersion}</Typography>
         </Grid>
         <Grid item>
         </Grid>

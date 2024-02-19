@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField } from "@mui/material";
 
-interface SaveProgramProps {
+interface SerialSaveProps {
     id: string,
     registerCallback: Function,
 }
 
-export default function SaveProgram(props: SaveProgramProps) {
+export default function SerialSave(props: SerialSaveProps) {
 
     const progEndRef = useRef<HTMLDivElement | null>(null);
 
