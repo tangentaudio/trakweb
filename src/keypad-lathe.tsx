@@ -37,7 +37,7 @@ export default function KeypadLathe(props: KeypadProps) {
         </Grid>
         <Grid item>
           <Grid container direction="row" spacing="1px">
-            <Grid item><Box sx={{ width: '70px', display: 'block', textAlign: 'center' }}><Switch size="small" checked={tipsEnabled} onChange={() => { setTipsEnabled(!tipsEnabled) }} /><Typography variant="subtitle2" sx={{width:'70px'}} textAlign="center">TIPS</Typography></Box></Grid>
+            <Grid item><Box sx={{ width: '70px', height: '70px', display: 'table-cell', verticalAlign: 'middle', textAlign: 'center' }}><Switch size="small" checked={tipsEnabled} onChange={() => { setTipsEnabled(!tipsEnabled) }} /><Typography variant="subtitle2" sx={{width:'70px'}} textAlign="center">TIPS</Typography></Box></Grid>
             <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_i} label="INC SET" altColor tooltip="Loads incremental dimensions and general data" tipsEnabled={tipsEnabled} /></Grid>
             <Grid item><KeypadButton sendKeyEvent={props.sendKeyEvent} keyCode={Keys.KBD_a} label="ABS SET" altColor tooltip="Loads absolute dimensions and general data" tipsEnabled={tipsEnabled} /></Grid>
             <Grid item><Button sx={{ border: 'none', color: '#000000' }} onClick={() => { window.open('lx2.pdf', '_blank') }}>Help</Button></Grid>
