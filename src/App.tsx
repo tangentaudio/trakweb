@@ -150,8 +150,8 @@ function App() {
     <ThemeProvider theme={theme}>
 
       <div style={{ display: 'block', float: 'right', padding: '6px' }}>
-        <Typography variant="caption" sx={{color: '#aaaaaa'}}>{buildVersion}</Typography>
-        { process.env.NODE_ENV === 'development' &&
+        <Typography variant="caption" sx={{ color: '#aaaaaa' }}>{buildVersion}</Typography>
+        {process.env.NODE_ENV === 'development' &&
           <Log registerCallback={registerLogCallback} />
         }
       </div>
@@ -176,20 +176,26 @@ function App() {
                     <DosPlayer bundleUrl={bundles[tab].bundle} setCommandInterface={sci} />
                   </div>
                   <div style={{ marginLeft: '6px' }}>
-                    <KeypadFKeys sendKeyEvent={sendKeyEvent}/>
+                    <KeypadFKeys sendKeyEvent={sendKeyEvent} />
                   </div>
                 </Box>
               </Grid>
               <Grid item >
                 <Grid container direction="row" sx={{ height: '100px' }} spacing={2}>
                   <Grid item>
-                    <Box component="img" src="protohak.png" sx={{ height: '100px', ml: '10px' }} />
+                    <Link href="https://github.com/tangentaudio/protohak"><Box component="img" src="protohak.png" sx={{ height: '100px', ml: '10px' }} /></Link>
                   </Grid>
                   <Grid item sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <Typography variant="h3" sx={{ fontWeight: 900, mb: '0px' }}>{bundles[tab].desc.toUpperCase()}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid item>
+              <Typography variant="caption" sx={{ fontWeight: '400', fontSize: '8px', color: '#777777', marginLeft: '8px' }}>
+                &copy; 2024 Steve Richardson (steve.richardson@makeitlabs.com).  For educational and training purposes only.
+                TRAK® is a registered trademark of Southwestern Industries.
+              </Typography>
             </Grid>
           </Grid>
           <Grid item>
@@ -209,19 +215,8 @@ function App() {
 
       <Grid container direction="column" sx={{ mt: '30px', ml: '10px' }}>
         <Grid item>
-          <Typography variant="caption" sx={{ fontWeight: '500', color: '#aaaaaa' }}>
-            TRAK® is a registered trademark of Southwestern Industries.  Original machine software images are available for download on their web site.
-          </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="caption" sx={{ fontWeight: '600', color: '#999999' }}>
-            Running 30 year old DOS software in a web browser is made possible through the magic of <Link href="https://js-dos.com/">js-dos v7</Link>, built on a wasm/emscripten version of <Link href="https://www.dosbox.com/">DOSBox</Link>.
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="caption" sx={{ fontWeight: '600', color: '#777777' }}>
-            <Link href="https://github.com/tangentaudio/protohak">ProtoHAK</Link> by Steve Richardson (steve.richardson@makeitlabs.com).  For educational and training purposes only - not for commercial use or resale.
-          </Typography>
         </Grid>
       </Grid>
 
