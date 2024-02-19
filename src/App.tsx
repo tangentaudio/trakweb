@@ -183,7 +183,7 @@ function App() {
               <Grid item >
                 <Grid container direction="row" sx={{ height: '100px' }} spacing={2}>
                   <Grid item>
-                    <Link href="https://github.com/tangentaudio/protohak"><Box component="img" src="protohak.png" sx={{ height: '100px', ml: '10px' }} /></Link>
+                    <Box component="img" src="protohak.png" sx={{ height: '100px', ml: '10px' }} />
                   </Grid>
                   <Grid item sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <Typography variant="h3" sx={{ fontWeight: 900, mb: '0px' }}>{bundles[tab].desc.toUpperCase()}</Typography>
