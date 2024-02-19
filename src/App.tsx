@@ -164,7 +164,7 @@ function App() {
         border: '8px solid black', borderRadius: '30px', padding: '6px', mt: '15px', ml: '10px', backgroundColor: '#eeeeee', maxWidth: '1170px',
         filter: 'drop-shadow(20px 20px 8px #333333)'
       }}>
-        <Grid container direction="row" spacing={2} sx={{ width: '100%', pl: '20px', pt: '0px' }}>
+        <Grid container direction="row" spacing={2} sx={{ width: '100%', pl: '20px', pt: '20px' }}>
           <Grid item>
             <Grid container direction="column" spacing="1px">
               <Grid item>
