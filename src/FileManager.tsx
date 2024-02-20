@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { styled } from '@mui/material/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button, Dialog, DialogActions, DialogTitle, DialogContent, Tooltip } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button, Dialog, DialogActions, DialogTitle, DialogContent, Tooltip, Typography } from "@mui/material";
 import Badge from '@mui/material/Badge';
 import SaveIcon from '@mui/icons-material/Save';
 import { CommandInterface } from "emulators";
@@ -25,7 +25,7 @@ const VisuallyHiddenInput = styled('input')({
     left: 0,
     whiteSpace: 'nowrap',
     width: 1,
-  });
+});
 
 interface FileManagerProps {
     getCommandInterface: Function,
@@ -37,28 +37,47 @@ export default function FileManager(props: FileManagerProps) {
 
     const [open, setOpen] = useState<boolean>(false);
     const [unsaved, setUnsaved] = useState<number>(0);
+    const [messages, setMessages] = useState<string[]|null>(null);
     const [fileList, setFileList] = useState<JSZip.JSZipObject[]>([]);
     let ci: CommandInterface = props.getCommandInterface();
 
     const zipobj = useRef<JSZip | null>(null);
 
+    const clearMessages = async () => {
+        setMessages(null);
+    }
+
+    const addMessage = async (clear: boolean, m: string) => {
+        
+        let msgs = clear ? [] : messages || [];
+        msgs.push(m);
+        setMessages(msgs);
+    }
+
     const uploadFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('saveToCache bundle name=', props.bundleUrl);
+        let clear:boolean = true;
+
         if (!zipobj.current || !e.target.files)
             return;
 
 
-        console.log(e.target.files);
         for (let i = 0; i < e.target.files.length; i++) {
             let f = e.target.files.item(i);
             if (f) {
-                zipobj.current.file(f.name, f);
-                setUnsaved(unsaved + 1);
+                let validFilenameRegexp = new RegExp(/^\d{1,8}.(LX2|MX2|MX3|CAM)/);
+
+                let filename = f.name.toUpperCase();
+                if (validFilenameRegexp.test(filename)) {
+                    zipobj.current.file(filename, f);
+                    setUnsaved(unsaved + 1);
+                } else {
+                    addMessage(clear, 'Filename "' + filename + '" is invalid.');
+                    clear = false;
+                }
             }
         }
 
         onOpen();
-        saveToCache();
     }
 
     const saveToCache = async () => {
@@ -66,7 +85,6 @@ export default function FileManager(props: FileManagerProps) {
             return;
         const cache = await cachePromise;
         const newfs = await zipobj.current.generateAsync({ type: "uint8array" });
-        console.log('newfs=', newfs.buffer);
         cache.put(props.bundleUrl + ".changes", newfs.buffer);
     }
 
@@ -74,7 +92,6 @@ export default function FileManager(props: FileManagerProps) {
     const erase = async (filename: string) => {
         if (!zipobj.current)
             return;
-        console.log('erase', filename);
 
         zipobj.current.remove(filename);
         setUnsaved(unsaved + 1);
@@ -83,7 +100,7 @@ export default function FileManager(props: FileManagerProps) {
         saveToCache();
     }
 
-    const download = async (filename: string) => {
+    const downloadFile = async (filename: string) => {
         if (!zipobj.current)
             return;
 
@@ -105,6 +122,8 @@ export default function FileManager(props: FileManagerProps) {
 
     function onClose() {
         setOpen(false);
+        setUnsaved(0);
+        clearMessages();
         zipobj.current = null;
     }
 
@@ -120,7 +139,7 @@ export default function FileManager(props: FileManagerProps) {
                     var fs_zip = new JSZip();
                     let onlyFiles: JSZip.JSZipObject[];
                     fs_zip.loadAsync(fsArray).then((z) => {
-                        let filesAndDirs: JSZip.JSZipObject[] = z.file(/(\.LX2|\.MX2|.MX3|.CAM)/);
+                        let filesAndDirs: JSZip.JSZipObject[] = z.file(/(\.LX2|\.MX2|.MX3|.CAM|.lx2|.mx2|.mx3|.cam)/);
                         setFileList(filesAndDirs);
                         zipobj.current = z;
                     })
@@ -129,7 +148,7 @@ export default function FileManager(props: FileManagerProps) {
                 }
             });
         } else {
-            let filesAndDirs: JSZip.JSZipObject[] = zipobj.current.file(/(\.LX2|\.MX2|.MX3|.CAM)/);
+            let filesAndDirs: JSZip.JSZipObject[] = zipobj.current.file(/(\.LX2|\.MX2|.MX3|.CAM.lx2|.mx2|.mx3|.cam)/);
             setFileList(filesAndDirs);
 
         }
@@ -143,10 +162,16 @@ export default function FileManager(props: FileManagerProps) {
                 </Badge>
             </IconButton>
             <Dialog open={open} >
-                <DialogTitle>
-                    File Manager
+                <DialogTitle sx={{ fontFamily: "monospace", fontWeight: 900 }}>
+                    Simulator C: Drive
                 </DialogTitle>
                 <DialogContent sx={{ minHeight: '400px', maxHeight: '600px' }}>
+                {unsaved > 0 &&
+                        <Box sx={{ backgroundColor: "#fff0f0", p: "10px", mt: "10px" }}>
+                            <Typography variant="subtitle2">New files or deleted files will not appear in PROG IN/OUT until you restart the simulator with the button below.</Typography>
+                            <Typography variant="subtitle1" color="error" sx={{fontWeight: 900}}>Only do this if you're sure you won't lose unsaved work!</Typography>
+                        </Box>
+                    }
                     <TableContainer>
                         <Table size="small">
                             <TableHead>
@@ -159,16 +184,16 @@ export default function FileManager(props: FileManagerProps) {
                             <TableBody>
                                 {fileList.map((f) => (
                                     <TableRow key={f.name}>
-                                        <TableCell sx={{fontFamily: "monospace", fontWeight: 900}}>{f.name}</TableCell>
+                                        <TableCell sx={{ fontFamily: "monospace", fontWeight: 900 }}>{f.name}</TableCell>
                                         <TableCell>{f.date.toLocaleString()}</TableCell>
                                         <TableCell>
-                                            <Tooltip title="Download to your Downloads folder." enterDelay={1500}>
-                                                <IconButton color="primary" onClick={(e) => { download(f.name) }}>
+                                            <Tooltip title="Download from the simulator C: drive to your computer." enterDelay={1500}>
+                                                <IconButton color="primary" onClick={(e) => { downloadFile(f.name) }}>
                                                     <IconDownload />
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title="Delete this file from the simulator C: drive." enterDelay={1500}>
-                                                <IconButton color="error" onClick={(e) => { erase(f.name) }}>
+                                                <IconButton color="inherit" onClick={(e) => { erase(f.name) }}>
                                                     <IconDelete />
                                                 </IconButton>
                                             </Tooltip>
@@ -178,25 +203,34 @@ export default function FileManager(props: FileManagerProps) {
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    {messages && messages.length > 0 &&
+                        <Box sx={{ backgroundColor: "#ffe0e0", p: "10px", mt: "10px" }}>
+                            {messages.map((m) => (
+                                <Typography variant="caption">{m}<br/></Typography>
+                            ))}
+                        </Box>
+                    }
                 </DialogContent>
                 <DialogActions>
-                    { unsaved > 0 &&
-                        <Button sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color="error" onClick={ () => { props.restartCallback(); setUnsaved(0); onClose(); }} >Restart</Button>
+                    {unsaved > 0 &&
+                        <Tooltip title="File manager files have changed.  You must restart the simulator for the changes to show up there." enterDelay={1500}>
+                            <Button sx={{ width: '150px', height: '40px', border: 'none', clipPath: 'none' }} color="error" onClick={() => { saveToCache(); setTimeout(() => { props.restartCallback(); onClose();}, 500); }} >Save & Restart</Button>
+                        </Tooltip>
                     }
-                    <Tooltip title="Upload from your Downloads folder to the simulator C: drive." enterDelay={1500}>
+                    <Tooltip title="Upload from your computer to the simulator C: drive." enterDelay={1500}>
                         <Button
                             component="label"
                             role={undefined}
                             variant="outlined"
-                            tabIndex={-1}
-                            startIcon={<IconUpload/>}
-                            sx={{ width: '150px', height: '40px', border: 'none', clipPath: 'none' }} 
+                            startIcon={<IconUpload />}
+                            color="secondary"
+                            sx={{ width: '150px', height: '40px', border: 'none', clipPath: 'none' }}
                         >
-                            Add File
-                            <VisuallyHiddenInput type="file" onChange={uploadFiles}/>
+                            Add File(s)
+                            <VisuallyHiddenInput type="file" onChange={uploadFiles} accept=".LX2,.MX2,.MX3,.CAM" multiple />
                         </Button>
                     </Tooltip>
-                    <Button variant="contained" sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color="primary" onClick={() => { onClose() }}>Close</Button>
+                    <Button variant={unsaved > 0 ? "contained" : "outlined"} sx={{ width: '100px', height: '40px', border: 'none', clipPath: 'none' }} color={unsaved > 0 ? "secondary" : "primary"} onClick={() => { onClose() }}>{unsaved > 0 ? "Cancel" : "Close"}</Button>
                 </DialogActions>
             </Dialog>
         </>
