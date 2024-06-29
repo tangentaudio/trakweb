@@ -143,7 +143,7 @@ rm -rf bundles.tsx
 echo "export const bundles = [" >> bundles.tsx
 
 [ "$LX2" == "yes" ] && process_one lx2 "LX2 Lathe" lathe ${LX2_BUNDLE} ${LX2_SW_URL} ${LX2_MANUAL_URL}
-[ "$MX3" == "yes"] && process_one mx3 "MX3 Mill" mill ${MX3_BUNDLE} ${MX3_SW_URL} ${MX3_MANUAL_URL}
+[ "$MX3" == "yes" ] && process_one mx3 "MX3 Mill" mill ${MX3_BUNDLE} ${MX3_SW_URL} ${MX3_MANUAL_URL}
 
 if [ -f ${MX2OFF_SW_URL} ];
 then 
